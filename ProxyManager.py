@@ -80,8 +80,8 @@ class HttpProxy:
         return self._isCancelUse
 
     def proxies(self):
-        pro = "http://%(ip)s:%(port)s" % {"ip" : self._ip,"port" : self._port}
-        return {"http": pro, "https": pro}
+        pro = "://%(ip)s:%(port)s" % {"ip" : self._ip,"port" : self._port}
+        return {"http": 'http' + pro, "https": 'http' + pro}
 
     def __str__(self):
         return self._ip + ":" + str(self._port)

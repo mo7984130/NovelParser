@@ -1,6 +1,5 @@
 __LAST_MODIFY__: str = "2025/05/12"
 
-from concurrent.futures import ThreadPoolExecutor, wait
 from bs4 import BeautifulSoup
 import logging
 
@@ -34,22 +33,14 @@ class Parser(NovelParser):
         dds = chapter_list_dl.find_all('dd')
         dds = dds[5:]
         self._chapters = []
-        no = 1
         for dd in dds:
+            self._last_no += 1
             a = dd.find('a')
             cpt = Chapter()
             cpt.title = a.text.replace(' ', '')
             cpt.url = self._base_host_url + a.get('href')
-            cpt.no = no
-            no += 1
+            cpt.no = self._last_no
             self._chapters.append(cpt)
-
-    # 初始化所有章节内容
-    def initChapters(self):
-        with ThreadPoolExecutor(max_workers=self._thread_pool_workers) as executor:
-            all_tasks = [executor.submit(self.initChapter, chapter) for chapter in self._chapters]
-            wait(all_tasks)
-            logging.info("initChapters success")
 
     # 初始化指定章节内容
     def initChapter(self, chapter: Chapter):
